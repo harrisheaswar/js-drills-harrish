@@ -1,4 +1,4 @@
-import {findCarById,findLastCar,sortByModel} from "./solution.js";
+import {findCarById,findLastCar,sortByModel,findAllCarYears} from "./solution.js";
 
 
 
@@ -93,4 +93,19 @@ import {findCarById,findLastCar,sortByModel} from "./solution.js";
     console.log("------------------End of test----------------------\n");
     
      
- 
+// ==== Problem #4 ====
+    // The accounting team needs all the years from every car on the lot. Execute a function that will return an array from the dealer data containing only the car years and log the result in the console as it was returned.
+  
+
+    console.log("Testing for function findAllByCarYear(): ")
+
+
+    //With No Params
+    console.log("Test with no params: ");  
+    const findAllYearsTest1=findAllCarYears();
+    console.log(findAllYearsTest1);
+
+    //With Params(Function doesnt take inputs by default so no change in test results)
+    console.log("Test with params: ");  
+    const findAllYearsTest2=findAllCarYears(2019);
+    console.log(findAllYearsTest2); 
