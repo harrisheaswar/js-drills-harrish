@@ -27,15 +27,41 @@ export function findCarById(inputId=33){
     //("Last car is a *car make goes here* *car model goes here*");
 
 
-    export function findLastCar(){
+export function findLastCar(){
 
-        if(inventory.length===0) return {message: "Inventory is Empty"};
-    
-        let lastIndex=inventory.length-1;
-    
+    if(inventory.length===0) return {message: "Inventory is Empty"};
+        let lastIndex=inventory.length-1;   
         return inventory[lastIndex];
-
     }    
 
+ // ==== Problem #3 ====
+  // The marketing team wants the car models listed alphabetically on the website. Execute a function to Sort all the car model names into alphabetical order and log the results in the console as it was returned.
+  
 
+export function sortByModel(){
+
+    let modelArray=[];
+
+    for(let index=0;index<inventory.length;index++){                                        //first stored all the models in an array
+        modelArray.push(inventory[index]["car_model"]);
+    }
+
+
+    for(let index=0;index<modelArray.length;index++){                                       //sorted it using double for loop. Selection sort
+        let minIndex= index;
+
+        for(let index2=index+1;index2<modelArray.length;index2++){
+            if(modelArray[index2].toLowerCase()<modelArray[minIndex].toLowerCase()){        //compares the strings(Converted it to lowercase to compare)
+                minIndex=index2;
+            }
+        }
+
+        if(minIndex!=index){
+            [modelArray[index],modelArray[minIndex]]=[modelArray[minIndex],modelArray[index]];
+        }
+
+    }
+    
+    return modelArray;
+}
     

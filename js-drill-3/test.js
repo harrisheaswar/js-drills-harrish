@@ -1,4 +1,4 @@
-import {findCarById,findLastCar} from "./solution.js";
+import {findCarById,findLastCar,sortByModel} from "./solution.js";
 
 
 
@@ -41,7 +41,7 @@ import {findCarById,findLastCar} from "./solution.js";
     console.log("------------------End of test----------------------\n");
 
 
-    // ==== Problem #2 ====
+// ==== Problem #2 ====
     // The dealer needs the information on the last car in their inventory. Execute a function to find what the make and model of the last car in the inventory is?  Log the make and model into the console in the format of:
     //("Last car is a *car make goes here* *car model goes here*");
 
@@ -73,3 +73,24 @@ import {findCarById,findLastCar} from "./solution.js";
     console.log("------------------End of test----------------------\n");
     
     
+ // ==== Problem #3 ====
+    // The marketing team wants the car models listed alphabetically on the website. Execute a function to Sort all the car model names into alphabetical order and log the results in the console as it was returned.
+  
+
+    console.log("Testing for function sortByModel(): ");
+
+
+    //With No Params
+    console.log("Test with no params: ");                                            
+    const sortByModelTest1=sortByModel();   
+    console.log(sortByModelTest1);
+
+    //With Params(Function doesnt take inputs by default so no change in test results)
+    console.log("Test with params: ");                                            
+    const sortByModelTest2=sortByModel("Tesla Model X");   
+    console.log(sortByModelTest2);
+
+    console.log("------------------End of test----------------------\n");
+    
+     
+ 
