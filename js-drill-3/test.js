@@ -110,6 +110,8 @@ import {findCarById,findLastCar,sortByModel,findAllCarYears,findOlderCars, findA
     const findAllYearsTest2=findAllCarYears(2019);
     console.log(findAllYearsTest2); 
 
+    console.log("------------------End of test----------------------\n");
+
 
 // ==== Problem #5 ====
     // The car lot manager needs to find out how many cars are older than the year 2000. Using the array you just obtained from the previous problem, find out how many cars were made before the year 2000 and return the array of older cars and log its length.
@@ -132,6 +134,8 @@ import {findCarById,findLastCar,sortByModel,findAllCarYears,findOlderCars, findA
     console.log("Test with inappropriate params: ");
     const findOlderCarsTest3=findOlderCars("Hello World!!");
     console.log(findOlderCarsTest3);
+
+    console.log("------------------End of test----------------------\n");
 
 
 
@@ -156,6 +160,8 @@ import {findCarById,findLastCar,sortByModel,findAllCarYears,findOlderCars, findA
      console.log("Test with inappropriate params: ");                                          
      const findCarsByInputTest3=JSON.stringify(findAllCarsByInput(12345));
      console.log(findCarsByInputTest3);
+
+    console.log("------------------End of test----------------------\n");
      
 
 
