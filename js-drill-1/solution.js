@@ -7,15 +7,11 @@ export function getAllEmails(){
 
     const emailArr=[];
 
-    for(let i=0;i<arr.length;i++){
-
-        if(arr[i].hasOwnProperty("email")){
-
-            emailArr.push(arr[i].email);
+        for(let index=0;index<arr.length;index++){
+            if(arr[index].hasOwnProperty("email")){
+                emailArr.push(arr[index].email);
+            }
         }
-        
-
-    }
 
     return emailArr;
 }
@@ -34,19 +30,16 @@ export function getHobbiesByAge(personAge=30){
 
     let count=0;
     
-    for(let i=0;i<arr.length;i++){
-
-        if(arr[i].hasOwnProperty("age")){
-
-            if(personAge===arr[i].age){
-
-                hobbieByAge.push((arr[i].hobbies));
-
-                count++;
+        for(let index=0;index<arr.length;index++){
+            if(arr[index].hasOwnProperty("age")){
+                if(personAge===arr[index].age){
+                    hobbieByAge.push((arr[index].hobbies));
+                    count++;
+                }
             }
         }
-    }
-    if(count===0) hobbieByAge.push(`No individuals with the age ${personAge}`);
+
+        if(count===0) hobbieByAge.push(`No individuals with the age ${personAge}`);
 
     return hobbieByAge;
 }
@@ -66,21 +59,21 @@ export function getStudentsByCountry(country='Australia'){
 
     
 
-    for(let i=0;i<arr.length;i++){
+        for(let index=0;index<arr.length;index++){
 
-        if(arr[i].hasOwnProperty('isStudent') && arr[i].isStudent){
+            if(arr[index].hasOwnProperty('isStudent') && arr[index].isStudent){
 
-                if(arr[i].hasOwnProperty("country") && arr[i].country===country){     //checks for properties in the object array and then pushes into extract array
-            
-                    extract.push(arr[i].name);
-                               
-                }else{
-                    count++;
-                }
-        }else{
-            count++;
+                    if(arr[index].hasOwnProperty("country") && arr[index].country===country){     //checks for properties in the object array and then pushes into extract array
+                
+                        extract.push(arr[index].name);
+                                
+                    }else{
+                        count++;
+                    }
+            }else{
+                count++;
+            }
         }
-    }
 
     
     
@@ -101,7 +94,7 @@ export function getNameAndCityByIndex(index=3){
         
     }
 
-        if(arr.length<index+1) console.log(`No student at index: ${index}`);
+    if(arr.length<index+1) console.log(`No student at index: ${index}`);
 
         if(arr[index].hasOwnProperty("name") && arr[index].hasOwnProperty("city") 
             && arr[index].name!=undefined){
@@ -122,15 +115,17 @@ export function getNameAndCityByIndex(index=3){
 // A loop to access and print the ages of all individuals in the dataset.
 
 export function getAgeOfAll(){
+
     let getAgeArr=[];
-    for(let i=0;i<arr.length;i++){
 
-        if(arr[i].hasOwnProperty("age")){
+        for(let index=0;index<arr.length;index++){
 
-            getAgeArr.push(`${arr[i].age}`);
+            if(arr[index].hasOwnProperty("age")){
 
+                getAgeArr.push(`${arr[index].age}`);
+
+            }
         }
-    }
     return getAgeArr;
 }
 
@@ -141,20 +136,21 @@ export function getAgeOfAll(){
 
 export function getFirstHobbyOfAll(){
     let arrHobbies=[];
-    for(let i=0;i<arr.length;i++){
 
-        if(arr[i].hasOwnProperty("hobbies")){
+        for(let index=0;index<arr.length;index++){
 
-            if(arr[i].hobbies.length!=0){
+            if(arr[index].hasOwnProperty("hobbies")){
 
-                arrHobbies.push((arr[i].hobbies[0]));
-            
-            }else{
-                 arrHobbies.push("It is undefined");
-                 
+                if(arr[index].hobbies.length!=0){
+
+                    arrHobbies.push((arr[index].hobbies[0]));
+                
+                }else{
+                    arrHobbies.push("It is undefined");
+                    
+                }
             }
         }
-    }
     return arrHobbies;
 }
 
@@ -170,14 +166,12 @@ export function getNameAndEmailByAge(age=25){
         return getNameArr;
     }
 
-    for(let i=0;i<arr.length;i++){
-
-        if(arr[i].hasOwnProperty('age') && arr[i].age===age){
-
-            getNameArr.push(`Name:${arr[i].name}    Email:${arr[i].email}`);
-
+        for(let index=0;index<arr.length;index++){
+            if(arr[index].hasOwnProperty('age') && arr[index].age===age){
+                getNameArr.push(`Name:${arr[index].name}    Email:${arr[index].email}`);
+            }
         }
-    }
+
     return getNameArr;
 
 }
@@ -189,14 +183,14 @@ export function getNameAndEmailByAge(age=25){
 
 export function getCityAndCountryOfAll(){
     let cityCountryArr=[];
-    for(let i=0;i<arr.length;i++){
+        for(let i=0;i<arr.length;i++){
 
-        if(arr[i].hasOwnProperty('city') && arr[i].hasOwnProperty('country')){
+            if(arr[i].hasOwnProperty('city') && arr[i].hasOwnProperty('country')){
 
-            cityCountryArr.push(`${i+1}. City:${arr[i].city}    Country:${arr[i].country}`);
+                cityCountryArr.push(`${i+1}. City:${arr[i].city}    Country:${arr[i].country}`);
 
+            }
         }
-    }
     return cityCountryArr;
 }
 
