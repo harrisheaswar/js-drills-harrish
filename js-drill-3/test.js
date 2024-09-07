@@ -1,4 +1,4 @@
-import {findCarById,findLastCar,sortByModel,findAllCarYears,findOlderCars} from "./solution.js";
+import {findCarById,findLastCar,sortByModel,findAllCarYears,findOlderCars, findAllCarsByInput} from "./solution.js";
 
 
 
@@ -133,5 +133,29 @@ import {findCarById,findLastCar,sortByModel,findAllCarYears,findOlderCars} from 
     const findOlderCarsTest3=findOlderCars("Hello World!!");
     console.log(findOlderCarsTest3);
 
+
+
+// ==== Problem #6 ====
+  // A buyer is interested in seeing only BMW and Audi cars within the inventory.  Execute a function and return an array that only contains BMW and Audi cars.  Once you have the BMWAndAudi array, use JSON.stringify() to show the results of the array in the console.
+  
+
+  console.log("Testing for function findAllCarsByInput(): ");
+
+
+     //With No Params
+     console.log("Test with no params: ");  
+     const findCarsByInputTest1=JSON.stringify(findAllCarsByInput());
+     console.log(findCarsByInputTest1);
+
+     //With correct Params
+     console.log("Test with correct params: ");                                               
+     const findCarsByInputTest2=JSON.stringify(findAllCarsByInput("BMW","Audi"));
+     console.log(findCarsByInputTest2);
+
+     //With inappropriate params
+     console.log("Test with inappropriate params: ");                                          
+     const findCarsByInputTest3=JSON.stringify(findAllCarsByInput(12345));
+     console.log(findCarsByInputTest3);
+     
 
 

@@ -86,12 +86,12 @@
   // The car lot manager needs to find out how many cars are older than the year 2000. Using the array you just obtained from the previous problem, find out how many cars were made before the year 2000 and return the array of older cars and log its length.
   
 
-  export function findOlderCars(inputYear=2000){
+  export function findOlderCars(inputYear=2000){                                                     //input year set to 2000 by default
 
     const yearArray= findAllCarYears();
     const olderCarsArr=[];
 
-    if(typeof inputYear!="number"){
+    if(typeof inputYear!="number"){                                                                    //Error message for invalid input
         return ("Invalid Input. Please enter an year(number)");
     }
 
@@ -102,4 +102,39 @@
     }
 
     return olderCarsArr;
+  }
+
+
+// ==== Problem #6 ====
+  // A buyer is interested in seeing only BMW and Audi cars within the inventory.  Execute a function and return an array that only contains BMW and Audi cars.  Once you have the BMWAndAudi array, use JSON.stringify() to show the results of the array in the console.
+
+
+  export function findAllCarsByInput(...inputCars){                                                 //Using rest for flexible inputs.
+
+    if(inputCars.length===0){                                                                       //If no input params. Then BMW and Audi are set as default
+        inputCars.push("BMW");
+        inputCars.push("Audi");
+    }
+    
+    for(let index=0;index<inputCars.length;index++){                                                // Test for invalid input with error response
+        let regexNum=/\d+/;
+        if(typeof inputCars[index]!="string" || regexNum.test(inputCars[index])){
+            return `Input is invalid, only car names(strings) allowed`;
+        }
+    }
+
+    const carArr=[];
+
+    for(let index=0;index<inputCars.length;index++){                                                // loop compares each input with inventory and return cars array
+
+        for(let index2=0;index2<inventory.length;index2++){
+            if(inventory[index2]["car_make"]===inputCars[index]){
+                carArr.push(inventory[index2]);
+            }
+        }
+
+    }
+
+    return carArr;
+
   }
