@@ -91,5 +91,3 @@ export function deleteFiles(dir, set = new Set()) {
       console.log(err);
     });
 }
-
-createDirectory(5, createFiles, deleteFiles);
