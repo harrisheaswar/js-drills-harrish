@@ -1,47 +1,23 @@
 import fs from "fs";
 //the function takes a number to create and delete those files
-export function createAndDeleteFiles(input = 5) {
-  let path = "/home/harrish-easwar/test";
+export function createAndDeleteFiles(input = 5, deleteFiles) {
+  let homePath = "/home/harrish-easwar/test";
   //create a directory
   const createDirPromise = new Promise((resolve, reject) => {
-    fs.mkdir(path, (err) => {
+    fs.mkdir(homePath, (err) => {
       if (err) {
         console.log("Error: Could not make directory");
         reject(err);
+      } else {
+        console.log("Successfully created directory");
+        resolve(input);
       }
-
-      resolve("Successfully created directory");
     });
   });
-  //Once directory is created then create the files inside the dir
+
   createDirPromise
-    .then(() => {
-      let promiseArr = [];
-      for (let index = 0; index < input; index++) {
-        let homePath = "/home/harrish-easwar/test";
-        let fileName = `${index}-file.json`;
-        let filePath = homePath + "/" + fileName;
-        let json = {
-          id: index,
-          value: Math.random(),
-        };
-        const promise = new Promise((resolve, reject) => {
-          fs.writeFile(filePath, JSON.stringify(json), "utf-8", (err) => {
-            if (err) {
-              console.log("Error: Could not create this file", err);
-              reject(err);
-            }
-            console.log(`${index}-file.json is created`);
-            resolve();
-          });
-        });
-
-        promiseArr.push(promise);
-      }
-
-      return Promise.all(promiseArr).then(() => {
-        return path;
-      });
+    .then((input) => {
+      return createFiles(input, homePath);
     })
     .then((homePath) => {
       //calling the delete function
@@ -49,6 +25,37 @@ export function createAndDeleteFiles(input = 5) {
     });
 
   return createDirPromise;
+}
+
+//--------------------------------------------------------//
+
+//Once directory is created then create the files inside the dir
+export function createFiles(input, homePath) {
+  let promiseArr = [];
+  for (let index = 0; index < input; index++) {
+    let fileName = `${index}-file.json`;
+    let filePath = homePath + "/" + fileName;
+    let json = {
+      id: index,
+      value: Math.random(),
+    };
+    const promise = new Promise((resolve, reject) => {
+      fs.writeFile(filePath, JSON.stringify(json), "utf-8", (err) => {
+        if (err) {
+          console.log("Error: Could not create this file", err);
+          reject(err);
+        }
+        console.log(`${index}-file.json is created`);
+        resolve();
+      });
+    });
+
+    promiseArr.push(promise);
+  }
+
+  return Promise.all(promiseArr).then(() => {
+    return homePath;
+  });
 }
 
 //reads the dir and deletes the files
@@ -92,4 +99,3 @@ export function deleteFiles(homePath) {
 
   return promiseOuter;
 }
-createAndDeleteFiles(5);
