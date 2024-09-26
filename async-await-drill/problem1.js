@@ -1,6 +1,8 @@
 import fs from "fs/promises";
 import path from "path";
 
+//-------------------solution starts here-------------------------//
+
 export async function createAndDelete(
   input = 5,
   createDir,
@@ -18,6 +20,8 @@ export async function createAndDelete(
 
   console.log("All files were deleted");
 }
+
+//--------------------------solution ends here----------------------------//
 
 //create directory function
 export async function createDir(dirName, homePath) {
