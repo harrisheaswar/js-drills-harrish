@@ -1,196 +1,188 @@
-const { default: fs } = await import("fs/promises");
+import fs from "fs/promises";
+import os from "os";
+import path from "path";
 
-export function readFileAndSolve(
-  convertToUpperCaseAndWrite,
-  convertToLowerCaseAndWrite,
-  sortTextAndWrite,
-  deleteRecent
+export function crudSolution(
+  lipsum = "lipsum.txt",
+  upperCaseFile = "upper-case.txt",
+  lowerCaseFile = "lower-case.txt",
+  sortedName = "sorted-txt",
+  fileName = "fileName.txt"
 ) {
-  let filePath = "/home/harrish-easwar/lipsum.txt";
-  let homeDir = "/home/harrish-easwar";
-  let newFilePath = "/home/harrish-easwar/fileName.txt";
-  let newFileSet = new Set();
-  //Read file lipsum.txt
-  const readFile = fs.readFile(filePath, "utf-8").catch((err) => {
-    console.log(`Error:Could not read file`, err);
-    return err;
-  });
+  let homeDir = os.homedir();
+  let fileMap = new Map(); //map filename to filepath
+  let storagePath = path.join(homeDir, fileName); // path to fileName.txt which stores file names
 
-  //from previous promise convert text to uppercase and return another promise
-  const upperCaseWritePath = readFile
-    .then((text) => {
-      return convertToUpperCaseAndWrite(text, homeDir);
+  //read lipsum.txt
+  const lipsumText = readFile(homeDir, lipsum);
+
+  return lipsumText
+    .then((lipsumText) => {
+      //create the filePath for uppercase text and map filename to path. Next converted text to uppercase and wrote to file
+      const upperCaseFilePath = path.join(homeDir, upperCaseFile);
+      fileMap.set(upperCaseFile, upperCaseFilePath);
+      return toUpperCaseAndWrite(lipsumText, upperCaseFilePath);
     })
-    .then((pathName) => {
-      newFileSet.add(pathName);
-      let upperCasePath = homeDir + "/" + pathName;
-      const promise = fs
-        .writeFile(newFilePath, pathName + "\n", "utf-8")
-        .then(() => {
-          console.log(`fileName.txt file created`);
-          return upperCasePath;
-        })
-        .catch(() => {
-          console.log("Error in creating file name fileName.txt");
-          return err;
-        });
-
-      return promise;
+    .then((upperCaseText) => {
+      //create the fileName.txt file to save filenames
+      return createOrOverwriteFile(storagePath, "", upperCaseText);
     })
-    .catch((err) => {
-      console.log(
-        "Could not convert to upper case and write to a new file",
-        err
-      );
-      return err;
-    });
-
-  //convert the text to lowercase and split into sentences and write to a new file
-  const toLowerCaseAndSplit = upperCaseWritePath.then((upperCasePath) => {
-    const promiseOuter = fs
-      .readFile(upperCasePath, "utf-8")
-      .then((upperCaseText) => {
-        return convertToLowerCaseAndWrite(upperCaseText, homeDir);
-      })
-      .then((pathName) => {
-        newFileSet.add(pathName);
-        const promiseInner = fs
-          .appendFile(newFilePath, pathName + "\n", "utf-8")
-          .then(() => {
-            let lowerCasePath = homeDir + "/" + pathName;
-            return lowerCasePath;
-          })
-          .catch((err) => {
-            console.log("Could not convert text to lowercase and split", err);
-            return err;
-          });
-        return promiseInner;
-      });
-    return promiseOuter;
-  });
-
-  //from the previous step, sort the text and store in another file
-  const sortText = toLowerCaseAndSplit.then((lowerCasePath) => {
-    const promiseOuter = fs
-      .readFile(lowerCasePath, "utf-8")
-      .then((lowerCaseText) => {
-        return sortTextAndWrite(lowerCaseText, homeDir);
-      })
-      .then((sortedPath) => {
-        newFileSet.add(sortedPath);
-        const promiseInner = fs
-          .appendFile(newFilePath, sortedPath + "\n", "utf-8")
-          .then(() => {
-            let lowerCasePath = homeDir + "/" + sortedPath;
-            return lowerCasePath;
-          })
-          .catch((err) => {
-            console.log("Could not convert text to lowercase and split", err);
-            return err;
-          });
-        return promiseInner;
-      })
-      .catch((err) => {
-        console.log("Error: Could not sort the text", err);
-        return err;
-      });
-
-    return promiseOuter;
-  });
-
-  //delete all the new files
-  const deletedRecentFiles = sortText.then(() => {
-    return deleteRecent(newFilePath, homeDir, newFileSet);
-  });
-}
-
-//function to convert to uppercase and write
-export function convertToUpperCaseAndWrite(text, homeDir) {
-  let upperCaseText = text.toUpperCase();
-  let pathName = "upper-case-text.txt";
-  let newPath = homeDir + "/" + "upper-case-text.txt";
-
-  const newPromise = fs
-    .writeFile(newPath, upperCaseText, "utf-8")
+    .then((upperCaseText) => {
+      //save the uppercase filename
+      return saveFileName(storagePath, upperCaseFile, upperCaseText);
+    })
+    .then((upperCaseText) => {
+      //convert upper case to lowercase and write
+      const lowerCaseFilePath = path.join(homeDir, lowerCaseFile);
+      fileMap.set(lowerCaseFile, lowerCaseFilePath);
+      return toLowerCaseAndWrite(upperCaseText, lowerCaseFilePath);
+    })
+    .then((lowerCaseText) => {
+      return saveFileName(storagePath, lowerCaseFile, lowerCaseText);
+    })
+    .then((lowerCaseText) => {
+      //create the sortedfile path and map to filename
+      const sortedPath = path.join(homeDir, sortedName);
+      fileMap.set(sortedName, sortedPath);
+      return sortTextAndWrite(lowerCaseText, sortedPath);
+    })
     .then(() => {
-      return pathName;
+      return saveFileName(storagePath, sortedName);
     })
-    .catch((err) => {
-      console.log("Could not write the path", err);
-      return err;
-    });
-
-  return newPromise;
-}
-//convert to lowercase and write
-export function convertToLowerCaseAndWrite(text, homeDir) {
-  let lowerCaseText = text.toLowerCase().trim();
-  let pathName = "lower-case-text.txt";
-  let newPath = homeDir + "/" + pathName;
-
-  let splitText = lowerCaseText.split(".").join("\n");
-  const newPromise = fs
-    .writeFile(newPath, splitText, "utf-8")
     .then(() => {
-      return pathName;
+      //delete all the recent files. Here the fileMap acts as a cache for deleting recent files
+      return deleteRecentFiles(storagePath, fileMap);
     })
-    .catch((err) => {
-      console.log("Could not write the path", err);
-      return err;
-    });
-
-  return newPromise;
-}
-
-//sort and write
-export function sortTextAndWrite(text, homeDir) {
-  let sortedText = text.split("\n").sort().join("\n").trim();
-  let pathName = "sorted-text.txt";
-  let newPath = homeDir + "/" + pathName;
-
-  const newPromise = fs
-    .writeFile(newPath, sortedText, "utf-8")
+    .then((updatedStr) => {
+      //Overriding the text for fileName.txt after reomving recent files
+      return createOrOverwriteFile(storagePath, updatedStr);
+    })
     .then(() => {
-      return pathName;
+      console.log("All tasks completed");
     })
     .catch((err) => {
-      console.log("Could not write the path", err);
+      console.log("Error: Could not complete all tasks", err);
       return err;
     });
-
-  return newPromise;
 }
 
-//function to delete recent files
-export function deleteRecent(newPath, homeDir, set) {
-  const promise = fs
-    .readFile(newPath, "utf-8")
-    .then((fileName) => {
-      let fileNamesArr = fileName.split("\n");
-      let modifiedArr = [];
+//-----------------------------------------------------------------------------//
+//-----------------------------------------------------------------------------//
+
+// FUnction to readfiles
+export function readFile(homeDir, lipsum) {
+  let lipsumPath = path.join(homeDir, lipsum);
+  let lipsumText = fs.readFile(lipsumPath, "utf-8");
+
+  return lipsumText;
+}
+
+//Function to convert to uppercase and write
+export function toUpperCaseAndWrite(lipsumText, upperCaseFilePath) {
+  let upperCaseText = lipsumText.toUpperCase().trim();
+
+  return fs
+    .writeFile(upperCaseFilePath, upperCaseText)
+    .then(() => {
+      console.log("Success: Created file with path: ", upperCaseFilePath);
+      return upperCaseText;
+    })
+    .catch((err) => {
+      console.log("Error:Could not create file with path: ", upperCaseFilePath);
+      return err;
+    });
+}
+
+//create or override a file
+export function createOrOverwriteFile(
+  storagePath,
+  content = "",
+  upperCaseText
+) {
+  return fs
+    .writeFile(storagePath, content)
+    .then(() => {
+      console.log("Success: created/overrided file name: ", storagePath);
+      return upperCaseText;
+    })
+    .catch((err) => {
+      console.log("Error: Could not create/override file: ", storagePath);
+      return err;
+    });
+}
+
+//save the file name into fileName.txt
+export function saveFileName(storagePath, fileName, upperCaseText = "") {
+  return fs
+    .appendFile(storagePath, fileName + "\n")
+    .then(() => {
+      console.log("Success: Appended file name: ", fileName);
+      if (upperCaseText) return upperCaseText;
+    })
+    .catch((err) => {
+      console.log("Could not append fileName: ", fileName);
+      return err;
+    });
+}
+
+//function to convert to lowercase and write
+export function toLowerCaseAndWrite(upperCaseText, lowerCaseFilePath) {
+  let lowerCaseText = upperCaseText.split(".").join("\n").toLowerCase().trim();
+
+  return fs
+    .writeFile(lowerCaseFilePath, lowerCaseText)
+    .then(() => {
+      console.log("Sucess: Created file: ", lowerCaseFilePath);
+      return lowerCaseText;
+    })
+    .catch((err) => {
+      console.log("Could not save fileName: ", lowerCaseFilePath);
+      return err;
+    });
+}
+
+// function to sort and write
+export function sortTextAndWrite(lowerCaseText, sortedPath) {
+  let sortedText = lowerCaseText.split("\n").sort().join("\n");
+
+  return fs
+    .writeFile(sortedPath, sortedText)
+    .then(() => {
+      console.log("Success: Created file: ", sortedPath);
+    })
+    .catch((err) => {
+      console.log("Error: COuld not create file with path: ", sortedPath);
+      return err;
+    });
+}
+
+// function to delete recent files
+export function deleteRecentFiles(storagePath, fileMap) {
+  return fs
+    .readFile(storagePath, "utf-8")
+    .then((fileNames) => {
+      return fileNames.split("\n");
+    })
+    .then((fileArr) => {
       let promiseArr = [];
-      fileNamesArr.forEach((name) => {
-        if (set.has(name)) {
-          let delPath = homeDir + "/" + name;
-
-          const promise = fs.unlink(delPath).catch((err) => {
-            console.log("Error: Could not delete the path", err);
-          });
+      let updatedStr = "";
+      fileArr.forEach((file) => {
+        if (fileMap.has(file)) {
+          const promise = fs.unlink(fileMap.get(file));
           promiseArr.push(promise);
         } else {
-          modifiedArr.push(name);
+          updatedStr += file + "\n";
         }
       });
-      return Promise.all(promiseArr).then(() => {
-        let modifiedText = modifiedArr.join("\n");
-        return fs.writeFile(newPath, modifiedText, "utf-8").then(() => {
-          console.log("successfully deleted the files");
-        });
-      });
+
+      return Promise.all(promiseArr).then(() => updatedStr);
+    })
+    .then((updatedStr) => {
+      console.log("Successfully deleted all the recent files");
+      return updatedStr;
     })
     .catch((err) => {
-      console.log("Files could not be deleted");
+      console.log("Error: Could not read file or delete files", err);
+      return err;
     });
-
-  return promise;
 }

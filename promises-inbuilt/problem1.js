@@ -2,7 +2,9 @@ const { default: fs } = await import("fs/promises");
 
 export function createDirectory(input = 5, createFiles, deleteFiles) {
   let dirPath = "/home/harrish-easwar/test";
-  fs.mkdir(dirPath)
+
+  return fs
+    .mkdir(dirPath)
     .then(() => {
       const set = new Set();
       //using set to store file name.O(1) look-up
